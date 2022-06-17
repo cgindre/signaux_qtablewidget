@@ -37,7 +37,7 @@ def main(args):
     app = QApplication(args)
     table = TableView(data, 4, 3)
     table.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
