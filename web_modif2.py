@@ -11,11 +11,11 @@ data = {'col1': ['1', '2', '3', '4'],
 
 
 class TableView(QTableWidget):
-    # def __init__(self, data, *args):
-    #     QTableWidget.__init__(self, *args)
+    def __init__(self, data, *args):
+        QTableWidget.__init__(self, *args)
     # Alternatively :
-    def __init__(self, data):
-        QTableWidget.__init__(self)
+    # def __init__(self, data):
+    #     QTableWidget.__init__(self)
         self.data = data
         self.setData()
     #     self.resizeColumnsToContents()
@@ -33,7 +33,7 @@ class TableView(QTableWidget):
 if __name__ == "__main__":
     # main(sys.argv)
     app = QApplication()
-    # table = TableView(data, 4, 3)
-    table = TableView(data)
+    table = TableView(data, 4, 3)
+    # table = TableView(data)
     table.show()
     sys.exit(app.exec())
