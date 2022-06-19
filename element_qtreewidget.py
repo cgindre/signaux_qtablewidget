@@ -12,6 +12,14 @@ print("list_symbole = ", list_symbole)
 app = QApplication()
 
 tw = QTreeWidget()
+tw.setHeaderLabels(['Élément'])
+
+list_tw = []
+for symbole in list_symbole:
+    list_tw.append(QTreeWidgetItem(tw, [symbole]))
+
+
+
 # tw.setHeaderLabels(['Name', 'Cost($)'])
 # cg = QTreeWidgetItem(tw, ['carrots', '2.99'])
 # ch = QTreeWidgetItem(tw, ['radishes', '1.99'])
@@ -19,12 +27,6 @@ tw = QTreeWidget()
 # cg2 = QTreeWidgetItem(cg, ['carrottes rondes', '2.33'])
 # ch1 = QTreeWidgetItem(ch, ['radish', '1.33'])
 
-tw.setColumnCount(2)
-cities = QTreeWidgetItem(tw)
-cities.setText(0, "Cities")
-osloItem = QTreeWidgetItem(cities)
-osloItem.setText(0, "Oslo")
-osloItem.setText(1, "Yes")
 
 tw.show()
 

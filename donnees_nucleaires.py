@@ -17,13 +17,11 @@ def list_fields_from_table(fields, table):
     """Retourne liste de champs issus d'une table"""
 
     # Chemin à fixer en relatif pour la suite ...
-    print("os.getcwd() =", os.getcwd())
-    os.chdir(r"C:\Users\cygindre\Documents\GitHub\erastem3\ihm\src\calcul")
-    print("os.getcwd() =", os.getcwd())
-    #cursor = init_cursor()
-    #cursor.execute("SELECT " + fields + " FROM " + table)
-    sqliteConnection = sqlite3.connect('Jeff.db')
-    cursor = sqliteConnection.cursor()
+    # print("os.getcwd() =", os.getcwd())
+    # os.chdir(r"C:\Users\cygindre\Documents\GitHub\erastem3\ihm\src\calcul")
+    # print("os.getcwd() =", os.getcwd())
+
+    cursor = init_cursor()
     cursor.execute("SELECT " + "symbole" + " FROM " + "Elements")
     list_fields = cursor.fetchall()
     # Transforme une liste de tuples d'objets en liste d'objet(tuple[0])

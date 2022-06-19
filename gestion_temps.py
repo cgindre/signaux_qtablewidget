@@ -77,7 +77,6 @@ class Instant:
 
     def str_instant(self):
         """Concatene les attributs d'un instant dans une chaine de caracteres."""
-        #return str(self.valeur()) + self.unite() + " " + self.auto_str()
         return str(conversions.scientific_notation(self.valeur())) + self.unite() + " " + self.auto_str()
 
     def __str__(self):
@@ -98,7 +97,7 @@ class ListeInstant :
     def __str__(self):
         str_data = str()
         for i in range(len(self)):
-            str_data += str(self.data[i]) + "\n"
+            str_data += "\t" + str(self.data[i]) + "\n"
         return str_data
 
     def set_value_instant(self, index, value_to_set):
@@ -138,6 +137,15 @@ class ListeInstant :
         """Supprime un element i de la liste data"""
         self.data.pop(i)
 
+    def modifie_instant(self, i, instant_or_str):
+        """Modifie un instant de la liste"""
+        old_instant = self.data[i]
+        new_instant = Instant(instant_or_str)
+        # si les valeurs sont differentes -> modification
+        if old_instant.value != new_instant.value:
+            self.data.pop(i)
+            self.data.insert(i, new_instant)
+
     def supprime_instant_liste(self, liste):
         # liste triee par ordre croissant puis inversion, pourquoi supprimer element dont valeur inferieur longueur liste...
         liste.sort()
@@ -170,6 +178,7 @@ class ListeInstant :
                     instant_tmp.unit = self.meilleure_unite_temps(instant_tmp.value)
                     self.ajoute_instant(instant_tmp, False)
 
+
             elif mode == 1:
                 for i in range(1, npas):
                     instant_tmp.value = t_ini_s + (t_fin_s - t_ini_s) * log10(1 + 9.0 * i / npas)
@@ -185,6 +194,7 @@ class ListeInstant :
                     self.ajoute_instant(instant_tmp, False)
 
             instant_tmp = Instant(t_fin, auto=True)
+            instant_tmp.unit = self.meilleure_unite_temps(instant_tmp.value)
             self.ajoute_instant(instant_tmp, False)
 
     def meilleure_unite_temps(self, temps):
@@ -221,50 +231,65 @@ if __name__ == '__main__':
     un_temps = Instant()
     un_temps.unit = 0
     un_temps.value = 58
-    print('un_temps = ', un_temps.value, un_temps.unit)
+    # print('un_temps = ', un_temps.value, un_temps.unit)
 
     un_temps.set_value_secondes(49)
     un_temps.set_unit('mn')
-    print('un_temps = ', un_temps.value, un_temps.unit)
+    # print('un_temps = ', un_temps.value, un_temps.unit)
 
-    print(un_temps.str_instant())
-    print(un_temps)
+    # print(un_temps.str_instant())
+    # print(un_temps)
 
     liste_instant = ListeInstant()
-    print(len(liste_instant))
+    # print(len(liste_instant))
     str_deux_instant = "5.0mn auto"
     liste_instant.ajoute_instant(str_deux_instant)
-    print(len(liste_instant))
+    # print(len(liste_instant))
+    print("result = ", str(liste_instant).find(str_deux_instant))
 
-    print(type(liste_instant.data[0]))
-    print(liste_instant.data[0].value)
-    print(liste_instant.data[0].unit)
-    print(liste_instant.data[0])
+    # print(type(liste_instant.data[0]))
+    # print(liste_instant.data[0].value)
+    # print(liste_instant.data[0].unit)
+    # print(liste_instant.data[0])
 
     liste_instant.ajoute_instant(str_deux_instant)
-    print(len(liste_instant))
+    # print(len(liste_instant))
 
-    for i in range(len(liste_instant)):
-        print(liste_instant.data[i])
+    # for i in range(len(liste_instant)):
+    #     print(liste_instant.data[i])
 
-    str_quatre_instant = "60s auto"
-    str_cinq_instant = "0.0h auto"
+    # str_quatre_instant = "60s auto"
+    # str_cinq_instant = "0.0h auto"
+    str_quatre_instant = "0s auto"
+    str_cinq_instant = "200s auto"
     liste_instant_2 = ListeInstant()
-    print("len(liste_instant_2) = ", len(liste_instant_2))
-    liste_instant_2.ajoute_auto(str_quatre_instant, str_cinq_instant, 6, 0)
-    print("len(liste_instant_2) = ", len(liste_instant_2))
-    liste_instant_2.ajoute_instant('15s manu')
-    liste_instant_2.supprime_instants_auto()
+    # print("len(liste_instant_2) = ", len(liste_instant_2))
+    liste_instant_2.ajoute_auto(str_quatre_instant, str_cinq_instant, 20, 0)
+    # print("len(liste_instant_2) = ", len(liste_instant_2))
+    # liste_instant_2.ajoute_instant('15s manu')
+
     print("len(liste_instant_2) = ", len(liste_instant_2))
 
-    for i in range(len(liste_instant_2)):
-        print(liste_instant_2.data[i])
+    # for i in range(len(liste_instant_2)):
+    #     print("data liste_instant_2", liste_instant_2.data[i])
+    #     print("type(liste_instant_2.data[i]) = ", type(liste_instant_2.data[i]))
+    # print("fin data")
+
+    print("liste_instant_2", liste_instant_2)
+    print("fin print liste_instant 1")
+    liste_instant_2.modifie_instant(2, "30s manu")
+
+    print("liste_instant_2", liste_instant_2)
+    print("fin print liste_instant 1")
+
+    liste_instant_2.supprime_instants_auto()
+    # print("len(liste_instant_2) = ", len(liste_instant_2))
+
+    # for i in range(len(liste_instant_2)):
+    #     print("data liste_instant_2", liste_instant_2.data[i])
 
     deux_instant = Instant(str_deux_instant)
     trois_instant = Instant(deux_instant)
 
-    #mon_nombre = 123453
-    mon_nombre = 17.78603
-    print("scientific_notation of ", mon_nombre, " is : ", conversions.scientific_notation(mon_nombre))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
