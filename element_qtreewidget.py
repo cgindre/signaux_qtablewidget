@@ -27,6 +27,11 @@ for symbole in list_symbole:
 # cg2 = QTreeWidgetItem(cg, ['carrottes rondes', '2.33'])
 # ch1 = QTreeWidgetItem(ch, ['radish', '1.33'])
 
+# Quelques optons de QTreeWidgetItem
+# print("item = ", item)
+# print("item.parent = ", item.parent())
+# print("item.parent.text() = ", item.parent().text(0))
+# print("type(item.parent) = ", type(item.parent()))
 
 tw.show()
 
