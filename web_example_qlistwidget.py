@@ -18,4 +18,4 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QTreeWidget, QTreeWidge
 #
 # app.exec()
 
-print("Hello !")
+print("Hello world"!")
