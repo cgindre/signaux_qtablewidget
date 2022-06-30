@@ -18,15 +18,59 @@ class ComboboxUnit(QComboBox):
 
 class tab_temps(QtWidgets.QWidget):
 
+    # def qqchose(self, event):
+    #     print("Incroyable ! Quelque chose s'est produit ! ")
+    #
+    # def mousePressEvent(self, event):
+    #     '''re-implemented to suppress Right-Clicks from selecting items.'''
+    #     print("aaaaaaaAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhhhAAAAAAAAAAAAA")
+    #     if event.type() == QtCore.QEvent.MouseButtonPress:
+    #         if event.button() == QtCore.Qt.RightButton:
+    #             return
+    #         else:
+    #             super(MyView, self).mousePressEvent(event)
+    def mouseMoveEvent(self, e):
+        #self.label.setText("mouseMoveEvent")
+        print("mouseMoveEvent")
+
+    def mousePressEvent(self, e):
+        #self.label.setText("mousePressEvent")
+        print("mousePressEvent")
+
+    def mouseReleaseEvent(self, e):
+        #self.label.setText("mouseReleaseEvent")
+        print("mouseReleaseEvent")
+
+    def mouseDoubleClickEvent(self, e):
+        #self.label.setText("mouseDoubleClickEvent")
+        print("mouseDoubleClickEvent")
+
+
+    def on_item_tab_temps_set_color(self, index):
+        """Fixe couleur texte QTableWidgetItem indexé : noir->"manu", bleu->"auto" """
+        if self.list_temps.data[index].auto:
+            self.table.item(index, 0).setForeground(QBrush(Qt.blue))
+        else:
+            self.table.item(index, 0).setForeground(QBrush(Qt.black))
+
     def on_cb_convert(self, index):
         def on_cb_convert():
-            unite = self.table.cellWidget(index, 1).currentText()
-            value = self.list_temps.data[index].valeur()
-            new_value = conversions.convertit_temps(value, "s", unite)
-            new_value = QTableWidgetItem(conversions.scientific_notation(str(new_value)))
-            #new_value.setForeground(QBrush(QColor("#81F8E3")))
-            new_value.setForeground(QBrush(Qt.blue))
-            self.table.setItem(index, 0, new_value)
+            self.table.blockSignals(True)
+            try:
+                unite = self.table.cellWidget(index, 1).currentText()
+                value = self.list_temps.data[index].value
+                new_value = conversions.convertit_temps(value, "s", unite)
+                # Sauvegarde nouvelle unité temps d'expression d'instant
+                self.list_temps.data[index].set_unit(unite)
+                print("nouvelle liste : \n", self.list_temps)
+
+                # Modification affichage dans tableau temps manuel
+                new_value = QTableWidgetItem(conversions.scientific_notation(str(new_value)))
+                self.table.setItem(index, 0, new_value)
+                self.on_item_tab_temps_set_color(index)
+            except:
+                pass
+            self.table.blockSignals(False)
         return on_cb_convert
 
     def on_item_changed(self):
@@ -62,12 +106,15 @@ class tab_temps(QtWidgets.QWidget):
             self.table.cb_unit.currentTextChanged.connect(self.on_cb_convert(row))
             self.table.setCellWidget(row, 1, self.table.cb_unit)
 
-        if self.previous_row != row:
-            print("cellule différente ! AVANT : ", self.previous_row, " MTN : ", row)
-            #unit = self.table.cb_unit.currentText()
-            #print("unit = ", unit)
+        if self.previous_row != row and self.previous_row != -1:
             self.table.removeCellWidget(self.previous_row, 1)
-            self.previous_row = row
+            unit = QTableWidgetItem(self.list_temps.data[self.previous_row].unite())
+            self.table.setItem(self.previous_row, 1, unit)
+
+        self.previous_row = row
+
+        #print("nouvelle liste : ", self.list_temps)
+
 
 
 
@@ -89,7 +136,7 @@ class tab_temps(QtWidgets.QWidget):
         self.list_temps = ListeInstant()
         une_liste_valeurs = [10, 20, 30, 40, 50, 60, 70, 120]
         for valeur in une_liste_valeurs:
-            self.list_temps.ajoute_instant(str(valeur) + "s" + " manu")
+            self.list_temps.ajoute_instant(str(valeur) + "s" + " auto")
 
 
         print("self.list_temps = \n", self.list_temps)
@@ -103,6 +150,7 @@ class tab_temps(QtWidgets.QWidget):
             unit = QTableWidgetItem(str(self.list_temps.data[i].unite()))
 
             self.table.setItem(i, 0, value)
+            self.on_item_tab_temps_set_color(i)
             self.table.setItem(i, 1, unit)
 
         # Affiche une ligne supplementaire par defaut
@@ -127,6 +175,9 @@ class tab_temps(QtWidgets.QWidget):
         self.table.cellClicked.connect(self.on_cell_clicked)
         # self.table.cellChanged.connect(self.on_cell_changed)
         # self.table.currentCellChanged.connect(self.on_current_cell_changed)
+
+        #test souris
+        #self.table.mousePressEvent(self.qqchose(RightButton))
 
         # Detection d'un changement d'unité
         # print(type(self.table.cellWidget(0,1)), type(self.table.cellWidget(0,1)))
