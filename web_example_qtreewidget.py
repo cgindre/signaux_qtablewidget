@@ -26,6 +26,11 @@ osloItem = QTreeWidgetItem(cities)
 osloItem.setText(0, "Oslo")
 osloItem.setText(1, "Yes")
 
+
+
+
+print(QMouseEvent.pos())
+
 tw.show()
 
 app.exec()
