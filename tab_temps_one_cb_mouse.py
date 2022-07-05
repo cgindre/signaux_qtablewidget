@@ -65,19 +65,28 @@ class tab_temps(QTableWidget):
             print("CLIC DROIT")
             menu = QMenu()
 
-            # act1 = menu.addAction('Action1')
-            # act1.triggered.connect(self.test())
-
-            menu.addAction('Action1', self.actionClicked)
-            menu.addAction('Action2', self.actionClicked)
-            menu.addAction('Action3', self.actionClicked)
+            menu.addAction('Supprimer tous les instants', self.actionClicked)
+            menu.addAction('Supprimer les instants automatiques', self.actionClicked)
+            menu.addAction('Trier', self.actionClicked)
+            menu.addAction('Eliminer les doublons', self.actionClicked)
 
             #menu.exec(event.globalPos())
             menu.exec(event.globalPosition().toPoint())
 
     def actionClicked(self):
         action = self.sender()
+        print("type(action) = ", type(action))
         print('Action: ', action.text())
+        if action.text() == 'Supprimer tous les instants':
+            print('Supprimer tous les instants')
+            self.list_temps.supprime_tous_instants()
+            self.display_tab_temps()
+        elif action.text() == 'Supprimer les instants automatiques':
+            print('Supprimer les instants automatiques')
+        elif action.text() == 'Trier':
+            print('Trier')
+        elif action.text() == 'Eliminer les doublons':
+            print('Eliminer les doublons')
 
     def test(self):
         print("click")
@@ -131,6 +140,34 @@ class tab_temps(QTableWidget):
             self.setItem(self.previous_row, 1, unit)
 
         self.previous_row = row
+
+    def display_tab_temps(self):
+        nb_rows = len(self.list_temps)
+        self.setRowCount(nb_rows)
+
+        liste_unite = ["s", "mn", "h", "j", "an"]
+        for i in range(nb_rows):
+            value = QTableWidgetItem(conversions.scientific_notation(str(self.list_temps.data[i].valeur())))
+            unit = QTableWidgetItem(str(self.list_temps.data[i].unite()))
+
+            self.setItem(i, 0, value)
+            self.on_item_tab_temps_set_color(i)
+            self.setItem(i, 1, unit)
+
+        # Affiche une ligne supplementaire par defaut
+        nb_rows = self.rowCount()
+        self.setRowCount(nb_rows + 1)
+        unit_default = QTableWidgetItem("s")
+        self.setItem(nb_rows, 1, unit_default)
+
+        # Formatage largeur de colonnes
+        self.setColumnWidth(1, 50)
+        self.resizeColumnToContents(0)
+        self.show()
+
+        self.cellClicked.connect(self.on_cell_clicked)
+
+
 
 
 if __name__=='__main__':

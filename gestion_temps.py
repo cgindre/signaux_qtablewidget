@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import conversions
-from numpy import log10, exp
+import conversions as conversions
+from numpy import log, log10, exp
 #from gestion_fichiers_cas_calculs import FichierEra
 
 class Instant:
@@ -43,6 +43,12 @@ class Instant:
                 #print("dans __init__, self.unit = ", self.unit)
                 #print("dans __init__, self.value = ", self.value)
 
+    def __eq__(self, other):
+        if conversions.scientific_notation(self.value) == conversions.scientific_notation(other.value):
+            return True
+        else:
+            return False
+
     def set_value_secondes(self,value_to_set):
         """Convertit valeur en secondes"""
         self.value = conversions.convertit_temps(value_to_set, self.unite(), 's')
@@ -69,6 +75,19 @@ class Instant:
         ligne = 0.0
         ligne = conversions.convertit_temps(self.value, 's', self.unite())
         return ligne
+
+    def meilleure_unite_temps(self, temps):
+        """ recherche l'unite de temps optimale"""
+        if (temps < 60.0):
+            return 0;  # secondes
+        elif (temps < 3600.0):
+            return 1;  # minutes
+        elif (temps < 86400.0):
+            return 2;  # heures
+        elif (temps < 86400.0 * 365):
+            return 3;  # jours
+        else:
+            return 4;  # ans
 
     def auto_str(self):
         """Renvoie 'auto' ou 'manu' suivant booleen auto"""
@@ -127,7 +146,7 @@ class ListeInstant :
             str_listeinstant += "\t" + instant.str_instant() + "\n"
         return str_listeinstant
 
-    def elimine(self):
+    def elimine_doublons(self):
         """Supprime les temps de la liste qui apparaissent plus d'une fois"""
         for temps in self.data:
             while self.data.count(temps) > 1:
@@ -139,10 +158,11 @@ class ListeInstant :
 
     def modifie_instant(self, i, instant_or_str):
         """Modifie un instant de la liste"""
+        print("IN modifie_instant")
         old_instant = self.data[i]
         new_instant = Instant(instant_or_str)
-        # si les valeurs sont differentes -> modification
-        if old_instant.value != new_instant.value:
+        # si les instants sont differents -> modification
+        if old_instant != new_instant:
             self.data.pop(i)
             self.data.insert(i, new_instant)
 
@@ -225,6 +245,29 @@ class ListeInstant :
             self.ajoute_instant(tete.strip())
             tete = next(fichier)
 
+    def supprime_tous_instants(self):
+        """ Supprimer tous les instants de la liste """
+        self.data = []
+
+    def trier(self):
+        """ permet de trier les instants par ordre croissant """
+        pass
+
+
+
+def periode_demi_vie(taux_desintegration):
+    """Renvoie chaine de caractière contenant valeur demi_vie formatée avec unité adaptée"""
+    if taux_desintegration == -1:
+        return "Stable"
+    else :
+        value_demi_vie_s = log(2) / taux_desintegration
+        demi_vie = Instant(str(value_demi_vie_s) + "s auto")
+        demi_vie.unit = demi_vie.meilleure_unite_temps(demi_vie.value)
+        conversions.NUMBER_OF_DIGITS = 4
+        format_demi_vie_valeur = conversions.scientific_notation(demi_vie.valeur())
+
+        return str(format_demi_vie_valeur) + demi_vie.unite()
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -280,6 +323,9 @@ if __name__ == '__main__':
     liste_instant_2.modifie_instant(2, "30s manu")
 
     print("liste_instant_2", liste_instant_2)
+    liste_instant_2.supprime_tous_instants()
+    print("liste_instant_2", liste_instant_2)
+
     print("fin print liste_instant 1")
 
     liste_instant_2.supprime_instants_auto()
@@ -291,5 +337,9 @@ if __name__ == '__main__':
     deux_instant = Instant(str_deux_instant)
     trois_instant = Instant(deux_instant)
 
+    print(periode_demi_vie(0.0057474890547))
 
 
+    # mon_nombre = 123453
+    # mon_nombre = 17.78603
+    # print("scientific_notation of ", mon_nombre, " is : ", conversions.scientific_notation(mon_nombre))
