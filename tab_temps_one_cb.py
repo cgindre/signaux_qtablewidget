@@ -50,7 +50,7 @@ class tab_temps(QtWidgets.QWidget):
         """Fixe couleur texte QTableWidgetItem indexé : noir->"manu", bleu->"auto" """
         if self.list_temps.data[index].auto:
             self.table.item(index, 0).setForeground(QBrush(Qt.blue))
-        els
+        else:
             self.table.item(index, 0).setForeground(QBrush(Qt.black))
 
     def on_cb_convert(self, index):
