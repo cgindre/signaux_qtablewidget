@@ -28,9 +28,6 @@ osloItem.setText(1, "Yes")
 
 
 
-
-print(QMouseEvent.pos())
-
 tw.show()
 
 app.exec()
