@@ -6,6 +6,22 @@ from PySide6.QtCore import Slot
 import sys
 import donnees_nucleaires
 
+def on_item_pressed() :
+    print("IN on_item_pressed")
+
+def on_item_clicked() :
+    print("IN on_item_clicked")
+
+def on_item_double_clicked() :
+    print("IN on_item_double_clicked")
+
+def mousePressEvent(self, event) :
+    print("IN mouse_press_event")
+    print("child clicked !")
+
+    if (event.button() == QtCore.Qt.RightButton) :
+        print("right click !")
+
 list_symbole = donnees_nucleaires.list_fields_from_table("symbole", "Elements")
 print("list_symbole = ", list_symbole)
 
@@ -19,6 +35,9 @@ for symbole in list_symbole:
     list_tw.append(QTreeWidgetItem(tw, [symbole]))
 
 
+tw.itemPressed.connect(on_item_pressed)
+tw.itemClicked.connect(on_item_clicked)
+tw.itemDoubleClicked.connect(on_item_double_clicked)
 
 # tw.setHeaderLabels(['Name', 'Cost($)'])
 # cg = QTreeWidgetItem(tw, ['carrots', '2.99'])
@@ -36,3 +55,4 @@ for symbole in list_symbole:
 tw.show()
 
 app.exec()
+
