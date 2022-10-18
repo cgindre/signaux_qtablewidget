@@ -26,6 +26,9 @@ class SymbolesElements(QTreeWidget) :
 
         if (event.button() == QtCore.Qt.RightButton):
             print("right click !")
+        elif (event.button() == QtCore.Qt.LeftButton):
+            print("left click !")
+            print("self.treePosition() = ", self.treePosition())
 
     def on_item_pressed(self) :
         print("IN on_item_pressed")
